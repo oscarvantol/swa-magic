@@ -1,0 +1,46 @@
+﻿@page "/masters"
+@inject HttpClient Http
+
+<PageTitle>Masters of the Mystic Arts</PageTitle>
+
+<h1>Masters of the Mystic Arts</h1>
+
+<p>The Masters of the Mystic Arts are an order of sorcerers dedicated to protecting the world from mystical threats. They originated in the time of Agamotto, and through the centuries developed into their current form. Notable current and former members include</p>
+
+@if (members == null)
+{
+    <p><em>Loading data...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Sourcerer Supreme</th>
+                <th>Universe</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var member in members)
+            {
+                <tr>
+                    <td>@member.Name</td>
+                    <td>@member.IsSourcererSupreme</td>
+                    <td>@member.Universe</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Member[]? members;
+
+    protected override async Task OnInitializedAsync()
+    {
+        members = await Http.GetFromJsonAsync<Member[]>("api/Members");
+    }
+
+    public record Member(string Name, bool IsSourcererSupreme, string Universe);
+}
